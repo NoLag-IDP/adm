@@ -1,0 +1,339 @@
+-- INF HUB - Adopt Me Pet Spawner (Ultra Simple Version)
+-- Works directly without complex UI libraries
+
+local Player = game:GetService("Players").LocalPlayer
+local PlayerGui = Player:WaitForChild("PlayerGui")
+
+-- Create a simple text-based UI
+local function createSimpleUI()
+    -- Create ScreenGui
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Name = "INF_HUB"
+    ScreenGui.Parent = PlayerGui
+    ScreenGui.ResetOnSpawn = false
+    
+    -- Main Frame
+    local MainFrame = Instance.new("Frame")
+    MainFrame.Name = "MainFrame"
+    MainFrame.Size = UDim2.new(0, 300, 0, 400)
+    MainFrame.Position = UDim2.new(0.5, -150, 0.5, -200)
+    MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+    MainFrame.BorderSizePixel = 0
+    MainFrame.Active = true
+    MainFrame.Draggable = true
+    MainFrame.Parent = ScreenGui
+    
+    -- Title
+    local Title = Instance.new("TextLabel")
+    Title.Name = "Title"
+    Title.Size = UDim2.new(1, 0, 0, 40)
+    Title.Position = UDim2.new(0, 0, 0, 0)
+    Title.BackgroundColor3 = Color3.fromRGB(50, 50, 70)
+    Title.BorderSizePixel = 0
+    Title.Text = "INF HUB - Adopt Me"
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Title.TextSize = 18
+    Title.Font = Enum.Font.GothamBold
+    Title.Parent = MainFrame
+    
+    -- Close Button
+    local CloseButton = Instance.new("TextButton")
+    CloseButton.Name = "CloseButton"
+    CloseButton.Size = UDim2.new(0, 30, 0, 30)
+    CloseButton.Position = UDim2.new(1, -35, 0, 5)
+    CloseButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+    CloseButton.BorderSizePixel = 0
+    CloseButton.Text = "X"
+    CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    CloseButton.TextSize = 16
+    CloseButton.Font = Enum.Font.GothamBold
+    CloseButton.Parent = MainFrame
+    
+    CloseButton.MouseButton1Click:Connect(function()
+        ScreenGui.Enabled = false
+    end)
+    
+    -- Toggle Button (to show/hide UI)
+    local ToggleButton = Instance.new("TextButton")
+    ToggleButton.Name = "ToggleButton"
+    ToggleButton.Size = UDim2.new(0, 100, 0, 40)
+    ToggleButton.Position = UDim2.new(0, 20, 1, -50)
+    ToggleButton.BackgroundColor3 = Color3.fromRGB(80, 80, 100)
+    ToggleButton.BorderSizePixel = 0
+    ToggleButton.Text = "OPEN INF HUB"
+    ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ToggleButton.TextSize = 14
+    ToggleButton.Font = Enum.Font.Gotham
+    ToggleButton.Visible = false
+    ToggleButton.Parent = PlayerGui
+    
+    ToggleButton.MouseButton1Click:Connect(function()
+        ScreenGui.Enabled = not ScreenGui.Enabled
+    end)
+    
+    -- Content Frame
+    local ContentFrame = Instance.new("ScrollingFrame")
+    ContentFrame.Name = "ContentFrame"
+    ContentFrame.Size = UDim2.new(1, -10, 1, -50)
+    ContentFrame.Position = UDim2.new(0, 5, 0, 45)
+    ContentFrame.BackgroundTransparency = 1
+    ContentFrame.BorderSizePixel = 0
+    ContentFrame.ScrollBarThickness = 5
+    ContentFrame.Parent = MainFrame
+    
+    -- Pet Name Input
+    local PetNameLabel = Instance.new("TextLabel")
+    PetNameLabel.Name = "PetNameLabel"
+    PetNameLabel.Size = UDim2.new(1, -20, 0, 25)
+    PetNameLabel.Position = UDim2.new(0, 10, 0, 10)
+    PetNameLabel.BackgroundTransparency = 1
+    PetNameLabel.Text = "Pet Name:"
+    PetNameLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+    PetNameLabel.TextSize = 14
+    PetNameLabel.TextXAlignment = Enum.TextXAlignment.Left
+    PetNameLabel.Font = Enum.Font.Gotham
+    PetNameLabel.Parent = ContentFrame
+    
+    local PetNameBox = Instance.new("TextBox")
+    PetNameBox.Name = "PetNameBox"
+    PetNameBox.Size = UDim2.new(1, -20, 0, 35)
+    PetNameBox.Position = UDim2.new(0, 10, 0, 40)
+    PetNameBox.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+    PetNameBox.BorderSizePixel = 0
+    PetNameBox.Text = ""
+    PetNameBox.PlaceholderText = "Enter pet name (Dog, Cat, Dragon...)"
+    PetNameBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    PetNameBox.TextSize = 14
+    PetNameBox.Font = Enum.Font.Gotham
+    PetNameBox.Parent = ContentFrame
+    
+    -- Pet Type Dropdown
+    local PetTypeLabel = Instance.new("TextLabel")
+    PetTypeLabel.Name = "PetTypeLabel"
+    PetTypeLabel.Size = UDim2.new(1, -20, 0, 25)
+    PetTypeLabel.Position = UDim2.new(0, 10, 0, 90)
+    PetTypeLabel.BackgroundTransparency = 1
+    PetTypeLabel.Text = "Pet Type:"
+    PetTypeLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+    PetTypeLabel.TextSize = 14
+    PetTypeLabel.TextXAlignment = Enum.TextXAlignment.Left
+    PetTypeLabel.Font = Enum.Font.Gotham
+    PetTypeLabel.Parent = ContentFrame
+    
+    local PetTypeButton = Instance.new("TextButton")
+    PetTypeButton.Name = "PetTypeButton"
+    PetTypeButton.Size = UDim2.new(1, -20, 0, 35)
+    PetTypeButton.Position = UDim2.new(0, 10, 0, 120)
+    PetTypeButton.BackgroundColor3 = Color3.fromRGB(60, 60, 80)
+    PetTypeButton.BorderSizePixel = 0
+    PetTypeButton.Text = "FR ▼"
+    PetTypeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    PetTypeButton.TextSize = 14
+    PetTypeButton.Font = Enum.Font.Gotham
+    PetTypeButton.Parent = ContentFrame
+    
+    local PetTypes = {"FR", "NFR", "MFR"}
+    local SelectedType = "FR"
+    
+    PetTypeButton.MouseButton1Click:Connect(function()
+        -- Simple type cycling
+        if SelectedType == "FR" then
+            SelectedType = "NFR"
+            PetTypeButton.Text = "NFR ▼"
+        elseif SelectedType == "NFR" then
+            SelectedType = "MFR"
+            PetTypeButton.Text = "MFR ▼"
+        else
+            SelectedType = "FR"
+            PetTypeButton.Text = "FR ▼"
+        end
+    end)
+    
+    -- Spawn Button
+    local SpawnButton = Instance.new("TextButton")
+    SpawnButton.Name = "SpawnButton"
+    SpawnButton.Size = UDim2.new(1, -20, 0, 40)
+    SpawnButton.Position = UDim2.new(0, 10, 0, 170)
+    SpawnButton.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
+    SpawnButton.BorderSizePixel = 0
+    SpawnButton.Text = "SPAWN PET"
+    SpawnButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    SpawnButton.TextSize = 16
+    SpawnButton.Font = Enum.Font.GothamBold
+    SpawnButton.Parent = ContentFrame
+    
+    -- Status Label
+    local StatusLabel = Instance.new("TextLabel")
+    StatusLabel.Name = "StatusLabel"
+    StatusLabel.Size = UDim2.new(1, -20, 0, 60)
+    StatusLabel.Position = UDim2.new(0, 10, 0, 225)
+    StatusLabel.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+    StatusLabel.BorderSizePixel = 0
+    StatusLabel.Text = "Ready"
+    StatusLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+    StatusLabel.TextSize = 14
+    StatusLabel.TextWrapped = true
+    StatusLabel.Font = Enum.Font.Gotham
+    StatusLabel.Parent = ContentFrame
+    
+    -- Hide main UI initially, show toggle button
+    ScreenGui.Enabled = false
+    ToggleButton.Visible = true
+    
+    return {
+        ScreenGui = ScreenGui,
+        PetNameBox = PetNameBox,
+        PetTypeButton = PetTypeButton,
+        SelectedType = function() return SelectedType end,
+        SpawnButton = SpawnButton,
+        StatusLabel = StatusLabel,
+        ToggleButton = ToggleButton
+    }
+end
+
+-- Main functionality
+task.spawn(function()
+    -- Create UI first
+    local UI = createSimpleUI()
+    
+    -- Try to load game modules
+    local loadFunc
+    local success, err = pcall(function()
+        loadFunc = require(game.ReplicatedStorage:WaitForChild("Fsys")).load
+    end)
+    
+    if not success then
+        UI.StatusLabel.Text = "Error: Cannot load game modules"
+        UI.StatusLabel.TextColor3 = Color3.fromRGB(255, 100, 100)
+        return
+    end
+    
+    local load = loadFunc
+    
+    -- Try to get InventoryDB
+    local InventoryDB
+    success, err = pcall(function()
+        InventoryDB = load("InventoryDB")
+    end)
+    
+    if not success or not InventoryDB then
+        UI.StatusLabel.Text = "Error: Cannot load pet database"
+        UI.StatusLabel.TextColor3 = Color3.fromRGB(255, 100, 100)
+        return
+    end
+    
+    -- Function to get pet by name
+    local function GetPetByName(name)
+        if not InventoryDB.pets then return false end
+        for i, v in pairs(InventoryDB.pets) do
+            if v.name and v.name:lower() == name:lower() then
+                return v.id
+            end
+        end
+        return false
+    end
+    
+    -- Function to create pet (simplified)
+    local function createPet(id, properties)
+        UI.StatusLabel.Text = "Creating pet..."
+        
+        -- Try to use game's pet creation system
+        local success, result = pcall(function()
+            -- This is a simplified version - actual implementation depends on game
+            local clientData = load("ClientData")
+            local items = load("KindDB")
+            
+            if not clientData or not items then return false end
+            
+            -- Create unique ID
+            local uniqueId = game:GetService("HttpService"):GenerateGUID(false)
+            
+            -- Update inventory
+            clientData.predict("inventory", function(inventory)
+                if not inventory or not inventory.pets then return inventory end
+                
+                local newPets = table.clone(inventory.pets)
+                local item = items[id]
+                if not item then return inventory end
+                
+                local pet = {
+                    unique = uniqueId,
+                    category = "pets",
+                    id = id,
+                    kind = item.kind,
+                    newness_order = 0,
+                    properties = properties
+                }
+                newPets[uniqueId] = pet
+                inventory.pets = newPets
+                return inventory
+            end)
+            
+            return true
+        end)
+        
+        if success then
+            UI.StatusLabel.Text = "Pet created successfully!"
+            UI.StatusLabel.TextColor3 = Color3.fromRGB(100, 255, 100)
+            
+            -- Clear input after successful spawn
+            UI.PetNameBox.Text = ""
+        else
+            UI.StatusLabel.Text = "Error creating pet"
+            UI.StatusLabel.TextColor3 = Color3.fromRGB(255, 100, 100)
+        end
+    end
+    
+    -- Connect spawn button
+    UI.SpawnButton.MouseButton1Click:Connect(function()
+        local petName = UI.PetNameBox.Text
+        local petType = UI.SelectedType()
+        
+        if petName == "" then
+            UI.StatusLabel.Text = "Please enter a pet name!"
+            UI.StatusLabel.TextColor3 = Color3.fromRGB(255, 200, 100)
+            return
+        end
+        
+        local petId = GetPetByName(petName)
+        if not petId then
+            UI.StatusLabel.Text = "Pet '" .. petName .. "' not found!"
+            UI.StatusLabel.TextColor3 = Color3.fromRGB(255, 100, 100)
+            return
+        end
+        
+        -- Prepare properties based on type
+        local properties = {
+            pet_trick_level = 0,
+            rideable = true,
+            flyable = true,
+            friendship_level = 0,
+            age = 1,
+            ailments_completed = 0,
+            rp_name = ""
+        }
+        
+        if petType == "NFR" then
+            properties.neon = true
+        elseif petType == "MFR" then
+            properties.mega_neon = true
+        end
+        
+        -- Create the pet
+        createPet(petId, properties)
+    end)
+    
+    -- Setup keybind to toggle UI (K key)
+    local UIS = game:GetService("UserInputService")
+    UIS.InputBegan:Connect(function(input, gameProcessed)
+        if not gameProcessed and input.KeyCode == Enum.KeyCode.K then
+            UI.ScreenGui.Enabled = not UI.ScreenGui.Enabled
+        end
+    end)
+    
+    UI.StatusLabel.Text = "INF HUB Ready! Press K to toggle."
+    UI.StatusLabel.TextColor3 = Color3.fromRGB(100, 200, 255)
+    
+    print("INF HUB loaded successfully!")
+    warn("INF HUB: Press K to open/close, or click the OPEN INF HUB button")
+end)
